@@ -5,6 +5,11 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import { AppDataSource } from "./config/database";
 import authRoutes from "./routes/auth.routes";
+import muscleGroupRoutes from "./routes/muscle-group.routes";
+import exerciseRoutes from "./routes/exercise.routes";
+import workoutRoutes from "./routes/workout.routes";
+import { MuscleGroupService } from "./services/muscle-group.service";
+import { ExerciseService } from "./services/exercise.service";
 
 dotenv.config();
 
@@ -20,10 +25,16 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/muscle-groups", muscleGroupRoutes);
+app.use("/api/exercises", exerciseRoutes);
+app.use("/api/workouts", workoutRoutes);
 
 AppDataSource.initialize()
-  .then(() => {
+  .then(async () => {
     console.log("Database connected");
+    await MuscleGroupService.seed();
+    await ExerciseService.seed();
+    console.log("Seed data initialized");
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

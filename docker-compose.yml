@@ -26,6 +26,7 @@ services:
       DB_PASSWORD: postgres
       DB_DATABASE: muscle_tracker
       JWT_SECRET: your-secret-key-change-later
+      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - db
     volumes:
