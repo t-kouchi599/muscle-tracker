@@ -78,12 +78,57 @@ export class WorkoutService {
   static async deleteWorkout(workoutId: string, userId: string) {
     const workout = await workoutRepository.findOne({
       where: { id: workoutId, user: { id: userId } },
+      relations: ["workoutExercises", "workoutExercises.sets"],
     });
 
     if (!workout) {
       throw new Error("ワークアウトが見つかりません");
     }
 
+    for (const we of workout.workoutExercises) {
+      await workoutSetRepository.remove(we.sets);
+    }
+    await workoutExerciseRepository.remove(workout.workoutExercises);
     await workoutRepository.remove(workout);
+  }
+
+  static async removeExercise(workoutExerciseId: number) {
+    const workoutExercise = await workoutExerciseRepository.findOne({
+      where: { id: workoutExerciseId },
+    });
+
+    if (!workoutExercise) {
+      throw new Error("種目が見つかりません");
+    }
+
+    await workoutSetRepository.delete({ workoutExercise: { id: workoutExerciseId } });
+    await workoutExerciseRepository.remove(workoutExercise);
+  }
+
+  static async removeSet(setId: number) {
+    const set = await workoutSetRepository.findOne({
+      where: { id: setId },
+    });
+
+    if (!set) {
+      throw new Error("セットが見つかりません");
+    }
+
+    await workoutSetRepository.remove(set);
+  }
+
+  static async updateSet(setId: number, weight: number, reps: number) {
+    const set = await workoutSetRepository.findOne({
+      where: { id: setId },
+    });
+
+    if (!set) {
+      throw new Error("セットが見つかりません");
+    }
+
+    set.weight = weight;
+    set.reps = reps;
+    await workoutSetRepository.save(set);
+    return set;
   }
 }

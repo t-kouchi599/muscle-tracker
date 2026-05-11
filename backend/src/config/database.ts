@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || "postgres",
   database: process.env.DB_DATABASE || "muscle_tracker",
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: ["src/entities/**/*.ts"],
   migrations: ["src/migrations/**/*.ts"],
 });

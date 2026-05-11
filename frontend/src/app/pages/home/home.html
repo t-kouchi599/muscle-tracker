@@ -1,0 +1,32 @@
+<div class="home-container">
+  <div class="header">
+    <h2>ワークアウト記録</h2>
+    <button (click)="logout()">ログアウト</button>
+  </div>
+
+  <div class="new-workout">
+    <h3>新しいワークアウト</h3>
+    <div class="form-group">
+      <label>日付</label>
+      <input type="date" [(ngModel)]="newDate" />
+    </div>
+    <div class="form-group">
+      <label>メモ</label>
+      <input type="text" [(ngModel)]="newNote" placeholder="胸の日、脚の日など" />
+    </div>
+    <button (click)="createWorkout()">記録を開始</button>
+  </div>
+
+  <div class="workout-list">
+    <h3>過去の記録</h3>
+    <div *ngIf="loading" class="empty">読み込み中...</div>
+    <div *ngIf="!loading && workouts.length === 0" class="empty">まだ記録がありません</div>
+    <div *ngFor="let workout of workouts" class="workout-card">
+      <div class="card-content" (click)="goToDetail(workout.id)">
+        <div class="workout-date">{{ workout.date }}</div>
+        <div class="workout-note">{{ workout.note || '' }}</div>
+      </div>
+      <button class="delete-btn" (click)="deleteWorkout(workout.id)">削除</button>
+    </div>
+  </div>
+</div>

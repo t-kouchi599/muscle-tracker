@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectorRef } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-register",
@@ -17,33 +18,29 @@ export class RegisterComponent {
   errorMessage = "";
   successMessage = "";
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  async onRegister() {
-    try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-          displayName: this.displayName,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        this.errorMessage = data.error;
+  onRegister() {
+    this.http.post<any>("http://localhost:3000/api/auth/register", {
+      email: this.email,
+      password: this.password,
+      displayName: this.displayName,
+    }).subscribe({
+      next: () => {
+        this.successMessage = "登録完了！ログインページへ移動します...";
+        this.errorMessage = "";
+        this.cdr.detectChanges();
+        setTimeout(() => this.router.navigate(["/login"]), 2000);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.error || "登録に失敗しました";
         this.successMessage = "";
-        return;
-      }
-
-      this.successMessage = "登録完了！ログインページへ移動します...";
-      this.errorMessage = "";
-      setTimeout(() => this.router.navigate(["/login"]), 2000);
-    } catch (error) {
-      this.errorMessage = "サーバーに接続できません";
-    }
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

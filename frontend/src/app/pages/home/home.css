@@ -1,0 +1,123 @@
+.home-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header button {
+  padding: 8px 16px;
+  background-color: #999;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.new-workout {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.new-workout h3 {
+  margin-bottom: 16px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.new-workout button {
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.workout-list h3 {
+  margin-bottom: 12px;
+}
+
+.empty {
+  color: #999;
+  text-align: center;
+  padding: 20px;
+}
+
+.workout-card {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.workout-card:hover {
+  background-color: #f5f5f5;
+}
+
+.workout-date {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.workout-note {
+  color: #666;
+  margin-top: 4px;
+}
+
+.workout-card {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-content {
+  cursor: pointer;
+  flex: 1;
+}
+
+.card-content:hover {
+  opacity: 0.7;
+}
+
+.delete-btn {
+  padding: 6px 12px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}

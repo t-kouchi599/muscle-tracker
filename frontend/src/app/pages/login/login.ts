@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectorRef } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-login",
@@ -15,28 +16,26 @@ export class LoginComponent {
   password = "";
   errorMessage = "";
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  async onLogin() {
-    try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: this.email, password: this.password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        this.errorMessage = data.error;
-        return;
-      }
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      this.router.navigate(["/"]);
-    } catch (error) {
-      this.errorMessage = "サーバーに接続できません";
-    }
+  onLogin() {
+    this.http.post<any>("http://localhost:3000/api/auth/login", {
+      email: this.email,
+      password: this.password,
+    }).subscribe({
+      next: (data) => {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        this.router.navigate(["/"]);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.error || "ログインに失敗しました";
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

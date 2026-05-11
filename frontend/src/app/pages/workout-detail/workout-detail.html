@@ -1,0 +1,71 @@
+<div class="detail-container">
+  <div class="header">
+    <button (click)="goBack()">← 戻る</button>
+    <h2>{{ workout?.date }}</h2>
+    <p class="note" *ngIf="workout?.note">{{ workout.note }}</p>
+  </div>
+
+  <div class="add-exercise">
+    <h3>種目を追加</h3>
+    <div class="form-group">
+      <label>部位</label>
+      <select [(ngModel)]="selectedMuscleGroupId" (change)="onMuscleGroupChange()">
+        <option value="">選択してください</option>
+        <option *ngFor="let mg of muscleGroups" [value]="mg.id">{{ mg.name }}</option>
+      </select>
+    </div>
+    <div class="form-group" *ngIf="filteredExercises.length > 0">
+      <label>種目</label>
+      <select [(ngModel)]="selectedExerciseId">
+        <option value="">選択してください</option>
+        <option *ngFor="let ex of filteredExercises" [value]="ex.id">{{ ex.name }}</option>
+      </select>
+    </div>
+    <button *ngIf="selectedExerciseId" (click)="addExercise()">追加</button>
+  </div>
+
+  <div class="exercises" *ngIf="workout?.workoutExercises?.length > 0">
+    <div *ngFor="let we of workout.workoutExercises" class="exercise-card">
+      <div class="exercise-header">
+        <h3>{{ we.exercise.name }} <span class="muscle-group">{{ we.exercise.muscleGroup.name }}</span></h3>
+        <button class="delete-btn" (click)="removeExercise(we.id)">種目削除</button>
+      </div>
+
+      <table class="sets-table">
+        <thead>
+          <tr>
+            <th>セット</th>
+            <th>重量(kg)</th>
+            <th>レップ</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let set of we.sets">
+            <td>{{ set.setNumber }}</td>
+            <td *ngIf="editingSetId !== set.id">{{ set.weight }}</td>
+            <td *ngIf="editingSetId !== set.id">{{ set.reps }}</td>
+            <td *ngIf="editingSetId === set.id">
+              <input type="number" [(ngModel)]="editWeight" class="edit-input" />
+            </td>
+            <td *ngIf="editingSetId === set.id">
+              <input type="number" [(ngModel)]="editReps" class="edit-input" />
+            </td>
+            <td class="actions">
+              <button *ngIf="editingSetId !== set.id" class="edit-btn" (click)="startEdit(set)">編集</button>
+              <button *ngIf="editingSetId === set.id" class="save-btn" (click)="saveEdit(we.id, set.id)">保存</button>
+              <button *ngIf="editingSetId === set.id" class="cancel-btn" (click)="cancelEdit()">取消</button>
+              <button class="delete-btn-sm" (click)="removeSet(we.id, set.id)">×</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="add-set">
+        <input type="number" [(ngModel)]="newWeight[we.id]" placeholder="重量" />
+        <input type="number" [(ngModel)]="newReps[we.id]" placeholder="レップ" />
+        <button (click)="addSet(we.id)">セット追加</button>
+      </div>
+    </div>
+  </div>
+</div>

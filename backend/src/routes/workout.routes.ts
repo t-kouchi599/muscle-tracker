@@ -84,4 +84,36 @@ router.delete("/:id", async (req: AuthRequest, res: Response) => {
   }
 });
 
+router.delete("/:id/exercises/:exerciseId", async (req: AuthRequest, res: Response) => {
+  try {
+    await WorkoutService.removeExercise(Number(req.params.exerciseId));
+    res.json({ message: "種目を削除しました" });
+  } catch (error: any) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.delete("/:id/exercises/:exerciseId/sets/:setId", async (req: AuthRequest, res: Response) => {
+  try {
+    await WorkoutService.removeSet(Number(req.params.setId));
+    res.json({ message: "セットを削除しました" });
+  } catch (error: any) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.put("/:id/exercises/:exerciseId/sets/:setId", async (req: AuthRequest, res: Response) => {
+  try {
+    const { weight, reps } = req.body;
+    if (!weight || !reps) {
+      res.status(400).json({ error: "重量とレップ数を入力してください" });
+      return;
+    }
+    const set = await WorkoutService.updateSet(Number(req.params.setId), weight, reps);
+    res.json(set);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 export default router;
